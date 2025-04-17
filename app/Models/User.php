@@ -12,6 +12,30 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_MITRA = 'mitra';
+    const ROLE_CUSTOMER = 'customer';
+
+    public function foods()
+    {
+        return $this->hasMany(Food::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'mitra_id');
+    }
+
+    public function customerOrders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
+    }
+
+    public function isMitra()
+    {
+        return $this->role === self::ROLE_MITRA;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +45,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'address',
+        'phone',
+        'balance',
     ];
 
     /**
@@ -34,15 +62,14 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'balance' => 'decimal:2',
+    ];
+
 }
