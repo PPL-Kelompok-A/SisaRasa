@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MitraSeeder::class,
+            CustomerSeeder::class,
             FoodSeeder::class,
             OrderSeeder::class,
         ]);

@@ -75,13 +75,21 @@
                             <img src="{{ asset('img/id.png') }}" alt="ID Flag" class="h-4 w-6 object-cover">
                         </button>
                         <div class="relative">
-                            <button type="button" class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary" id="user-menu-button">
-                                <span class="sr-only">Open user menu</span>
-                                <div class="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                </div>
-                            </button>
-                        </div>
+    <button type="button" class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary" id="user-menu-button">
+        <span class="sr-only">Open user menu</span>
+        <div class="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center">
+            {{ substr(Auth::user()->name, 0, 1) }}
+        </div>
+    </button>
+    <!-- Desktop user dropdown -->
+    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50">
+        <div class="px-4 py-2 text-sm text-gray-700 border-b">{{ Auth::user()->name }}</div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+        </form>
+    </div>
+</div>
                     </div>
                 </div>
                 
@@ -133,6 +141,11 @@
                                     <img src="{{ asset('img/id.png') }}" alt="ID Flag" class="h-4 w-6 object-cover">
                                 </button>
                             </div>
+                            <!-- Mobile logout -->
+                            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Logout</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -159,5 +172,20 @@
             </div>
         </main>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userBtn = document.getElementById('user-menu-button');
+        const dropdown = document.getElementById('user-dropdown');
+        if (userBtn && dropdown) {
+            userBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function() {
+                dropdown.classList.add('hidden');
+            });
+        }
+    });
+</script>
 </body>
 </html>

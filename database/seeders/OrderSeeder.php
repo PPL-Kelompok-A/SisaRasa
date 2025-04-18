@@ -14,79 +14,85 @@ class OrderSeeder extends Seeder
 {
     public function run(): void
     {
+        // Find the mitra user
         $mitra = User::where('email', 'cimol@sisarasa.com')->first();
-        $foods = Food::where('user_id', $mitra->id)->get();
-
-        if ($foods->isEmpty()) {
+        if (!$mitra) {
+            $this->command->error('Mitra user not found!');
             return;
         }
-
-        // Create some customers
-        $customers = [];
-        for ($i = 1; $i <= 5; $i++) {
-            $customers[] = User::create([
-                'name' => "Customer {$i}",
-                'email' => "customer{$i}@example.com",
-                'password' => Hash::make('password'),
-                'role' => 'customer',
-                'address' => "Jl. Customer No. {$i}",
-                'phone' => "08123456789{$i}",
-            ]);
+        
+        // Get foods from this mitra
+        $foods = Food::where('user_id', $mitra->id)->get();
+        if ($foods->isEmpty()) {
+            $this->command->error('No foods found for this mitra!');
+            return;
         }
-
-        // Create orders with different dates and statuses
-        $statuses = ['completed', 'processing', 'pending', 'cancelled'];
-        $dates = [
-            Carbon::today(),
-            Carbon::today()->subDays(1),
-            Carbon::today()->subDays(2),
-            Carbon::today()->subDays(3),
-            Carbon::today()->subWeek(),
-            Carbon::today()->subWeeks(2),
-            Carbon::today()->subMonth(),
-        ];
-
-        foreach ($dates as $date) {
-            foreach ($customers as $customer) {
-                // Not every customer orders every day
-                if (rand(0, 1)) {
-                    continue;
-                }
-
-                $status = $statuses[array_rand($statuses)];
-                $order = Order::create([
-                    'user_id' => $customer->id,
-                    'mitra_id' => $mitra->id,
-                    'status' => $status,
-                    'total_amount' => 0,
-                    'delivery_address' => 'Jl. Customer No. ' . $customer->id,
-                    'created_at' => $date,
-                    'updated_at' => $date,
+        
+        // Get existing customers or create new ones if needed
+        $customers = User::where('role', 'customer')->take(5)->get();
+        
+        if ($customers->count() < 5) {
+            $existingCount = $customers->count();
+            for ($i = $existingCount + 1; $i <= 5; $i++) {
+                $customers[] = User::create([
+                    'name' => "Customer {$i}",
+                    'email' => "customer{$i}@example.com",
+                    'password' => Hash::make('password'),
+                    'role' => 'customer',
+                    'address' => "Jl. Customer No. {$i}",
+                    'phone' => "08123456789{$i}",
                 ]);
-
-                // Add 1-3 items to each order
-                $orderTotal = 0;
-                $numItems = rand(1, 3);
-                for ($i = 0; $i < $numItems; $i++) {
-                    $food = $foods->random();
-                    $quantity = rand(1, 3);
-                    
-                    $subtotal = $food->price * $quantity;
-                    OrderItem::create([
-                        'order_id' => $order->id,
-                        'food_id' => $food->id,
-                        'quantity' => $quantity,
-                        'price' => $food->price,
-                        'subtotal' => $subtotal,
-                        'created_at' => $date,
-                        'updated_at' => $date,
-                    ]);
-
-                    $orderTotal += $food->price * $quantity;
-                }
-
-                $order->update(['total_amount' => $orderTotal]);
             }
         }
+        
+        // Create 20 new pending orders
+        $this->command->info('Creating 20 new pending orders...');
+        
+        // Get the latest order number
+        $latestOrder = Order::orderBy('id', 'desc')->first();
+        $orderCount = $latestOrder ? intval(substr($latestOrder->id, 4)) : 0;
+        
+        for ($i = 1; $i <= 20; $i++) {
+            // Randomly select a customer
+            $customer = $customers->random();
+            
+            // Create a new pending order
+            $order = Order::create([
+                'user_id' => $customer->id,
+                'mitra_id' => $mitra->id,
+                'status' => 'pending',
+                'total_amount' => 0,
+                'delivery_address' => $customer->address ?? 'Jl. Customer No. ' . $customer->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            
+            // Add 1-3 random food items to the order
+            $orderTotal = 0;
+            $numItems = rand(1, 3);
+            
+            for ($j = 0; $j < $numItems; $j++) {
+                $food = $foods->random();
+                $quantity = rand(1, 3);
+                
+                $subtotal = $food->price * $quantity;
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'food_id' => $food->id,
+                    'quantity' => $quantity,
+                    'price' => $food->price,
+                    'subtotal' => $subtotal,
+                ]);
+                
+                $orderTotal += $subtotal;
+            }
+            
+            // Update the order total
+            $order->update(['total_amount' => $orderTotal]);
+            
+            $this->command->info("Created pending order #{$i} with total: Rp {$orderTotal}");
+        }
+        
+        $this->command->info('Order seeding completed successfully!');
     }
 }

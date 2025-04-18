@@ -38,23 +38,44 @@ class MitraController extends Controller
         Log::info('Orders count: ' . $orders->count());
 
         // Analytics data
-        $today = Carbon::today();
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $startOfYear = Carbon::now()->startOfYear();
+        // Set timezone to Asia/Jakarta for Indonesia
+        $today = Carbon::today('Asia/Jakarta');
+        $last7Days = Carbon::now('Asia/Jakarta')->subDays(7);
+        $startOfMonth = Carbon::now('Asia/Jakarta')->startOfMonth();
+        $startOfYear = Carbon::now('Asia/Jakarta')->startOfYear();
 
-        // Daily sales
-        $dailySales = Order::where('mitra_id', $user->id)
-            ->whereDate('created_at', $today)
+        // Daily sales with explicit date range using OrderHistory
+        $startOfToday = $today->copy()->startOfDay();
+        $endOfToday = $today->copy()->endOfDay();
+        
+        // Get orders completed today using OrderHistory
+        $dailySales = OrderHistory::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereBetween('completed_at', [$startOfToday, $endOfToday])
+            ->sum('total_amount');
+            
+        // For debugging
+        $todayCompletedOrders = OrderHistory::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereBetween('completed_at', [$startOfToday, $endOfToday])
+            ->get();
+            
+        Log::info('Today date range: ' . $startOfToday . ' to ' . $endOfToday);
+        Log::info('Today completed orders count: ' . $todayCompletedOrders->count());
+        foreach ($todayCompletedOrders as $order) {
+            Log::info('Order ID: ' . $order->order_id . ', Amount: ' . $order->total_amount . ', Completed at: ' . $order->completed_at);
+        }
+
+        // Weekly sales (last 7 days) using OrderHistory
+        $weeklySales = OrderHistory::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereBetween('completed_at', [$last7Days, $endOfToday])
             ->sum('total_amount');
 
-        // Weekly sales
-        $weeklySales = Order::where('mitra_id', $user->id)
-            ->where('created_at', '>=', $startOfWeek)
-            ->sum('total_amount');
-
-        // Yearly sales
-        $yearlySales = Order::where('mitra_id', $user->id)
-            ->where('created_at', '>=', $startOfYear)
+        // Yearly sales using OrderHistory
+        $yearlySales = OrderHistory::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereBetween('completed_at', [$startOfYear, $endOfToday])
             ->sum('total_amount');
 
         // Most popular foods
@@ -408,27 +429,44 @@ class MitraController extends Controller
     
     public function orderHistoryIndex()
     {
-        $orderHistories = OrderHistory::where('user_id', Auth::id())
-            ->latest('completed_at')
+        $user = auth()->user();
+        $orderHistories = OrderHistory::where('user_id', $user->id)
+            ->orderBy('completed_at', 'desc')
             ->paginate(10);
             
         return view('mitra.orders.history.index', compact('orderHistories'));
     }
     
+    /**
+     * Show order history details
+     */
     public function orderHistoryShow(OrderHistory $orderHistory)
     {
-        // Check if the authenticated user is the owner of this order history
-        if (Auth::id() !== $orderHistory->user_id) {
-            abort(403, 'Unauthorized action.');
+        // Check if the order history belongs to the authenticated user
+        if ($orderHistory->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
         
+        // Format order items for display
+        $formattedItems = [];
+        foreach ($orderHistory->order_items as $item) {
+            $formattedItems[] = [
+                'name' => $item['name'] ?? 'Unknown Item',
+                'quantity' => $item['quantity'] ?? 0,
+                'price' => $item['price'] ?? 0,
+                'subtotal' => $item['subtotal'] ?? 0,
+            ];
+        }
+
         return response()->json([
             'id' => $orderHistory->id,
             'order_number' => $orderHistory->order_number,
-            'total_amount' => $orderHistory->total_amount,
+            'total_amount' => number_format($orderHistory->total_amount, 0, ',', '.'),
             'status' => ucfirst($orderHistory->status),
             'completed_at' => $orderHistory->completed_at->format('M d, Y H:i'),
-            'order_items' => $orderHistory->order_items
+            'items' => $formattedItems,
+            'customer_name' => $orderHistory->user->name ?? 'Unknown Customer',
+            'delivery_address' => $orderHistory->delivery_address ?? 'No address provided'
         ]);
     }
 }
