@@ -32,7 +32,11 @@
                                         </span>
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                        <button type="button" class="text-indigo-600 hover:text-indigo-900 view-details" data-history-id="{{ $history->id }}">
+                                        <button data-modal-target="order-modal-{{ $history->id }}" data-modal-toggle="order-modal-{{ $history->id }}" class="inline-flex items-center justify-center px-4 py-2 bg-secondary hover:bg-secondary/80 text-white rounded-md shadow-sm text-sm font-medium">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
                                             View Details
                                         </button>
                                     </td>
@@ -53,119 +57,117 @@
         {{ $orderHistories->links() }}
     </div>
 
-    <!-- Order Details Modal -->
-    <div id="orderDetailsModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
-            <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Order Details</h3>
-                <button type="button" class="close-modal absolute top-4 right-4 text-gray-400 hover:text-gray-500">
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="px-4 py-5 sm:p-6">
-                <div id="orderDetailsContent">
-                    <!-- Content will be loaded here -->
+    <!-- Order Modals -->
+    @foreach ($orderHistories as $history)
+    <div id="order-modal-{{ $history->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Order Details #{{ $history->order_number }}
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="order-modal-{{ $history->id }}">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
                 </div>
-            </div>
-            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 rounded-b-lg">
-                <button type="button" class="close-modal inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Close
-                </button>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold text-gray-700">Order Number:</p>
+                            <p class="text-gray-600">#{{ $history->order_number }}</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-700">Date:</p>
+                            <p class="text-gray-600">{{ $history->completed_at->format('d M Y H:i') }}</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-700">Status:</p>
+                            <p class="text-gray-600 {{ $history->status === 'completed' ? 'text-green-700' : 'text-red-700' }}">
+                                {{ ucfirst($history->status) }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="font-semibold text-gray-700">Items:</p>
+                        <div class="mt-2">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @if(isset($history->order_items) && is_array($history->order_items) && count($history->order_items) > 0)
+                                    @foreach($history->order_items as $item)
+                                    <tr>
+                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">{{ $item['food_name'] ?? 'Unknown Item' }}</td>
+                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ $item['quantity'] ?? 0 }}</td>
+                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format($item['price'] ?? 0, 0, ',', '.') }}</td>
+                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">Rp {{ number_format(($item['price'] ?? 0) * ($item['quantity'] ?? 0), 0, ',', '.') }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @else
+                                    <tr>
+                                        <td colspan="4" class="px-3 py-2 text-sm text-gray-500 text-center">Tidak ada detail item tersedia</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <div class="flex justify-between">
+                            <h4 class="text-base font-medium text-gray-900">Total</h4>
+                            <p class="text-base font-medium text-gray-900">Rp {{ number_format($history->total_amount, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="order-modal-{{ $history->id }}" type="button" class="text-white bg-accent hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</button>
+                </div>
             </div>
         </div>
     </div>
+    @endforeach
 
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // View order details
-            const viewButtons = document.querySelectorAll('.view-details');
-            const modal = document.getElementById('orderDetailsModal');
-            const closeButtons = document.querySelectorAll('.close-modal');
-            const orderDetailsContent = document.getElementById('orderDetailsContent');
-
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const historyId = this.getAttribute('data-history-id');
-                    
-                    // Fetch order details via AJAX
-                    fetch(`/mitra/orders/history/${historyId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            let content = `
-                                <div class="mb-4">
-                                    <h4 class="text-sm font-medium text-gray-500">Order Number</h4>
-                                    <p class="mt-1 text-sm text-gray-900">${data.order_number}</p>
-                                </div>
-                                <div class="mb-4">
-                                    <h4 class="text-sm font-medium text-gray-500">Date</h4>
-                                    <p class="mt-1 text-sm text-gray-900">${data.completed_at}</p>
-                                </div>
-                                <div class="mb-4">
-                                    <h4 class="text-sm font-medium text-gray-500">Status</h4>
-                                    <p class="mt-1 text-sm text-gray-900">${data.status}</p>
-                                </div>
-                                <div class="mb-4">
-                                    <h4 class="text-sm font-medium text-gray-500">Items</h4>
-                                    <div class="mt-2">
-                                        <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-50">
-                                                <tr>
-                                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="bg-white divide-y divide-gray-200">`;
-                            
-                            data.order_items.forEach(item => {
-                                const subtotal = item.quantity * item.price;
-                                content += `
-                                    <tr>
-                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">${item.food_name}</td>
-                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">${item.quantity}</td>
-                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">Rp ${parseFloat(item.price).toLocaleString('id-ID')}</td>
-                                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">Rp ${subtotal.toLocaleString('id-ID')}</td>
-                                    </tr>`;
-                            });
-                            
-                            content += `
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="mt-4 pt-4 border-t border-gray-200">
-                                    <div class="flex justify-between">
-                                        <h4 class="text-base font-medium text-gray-900">Total</h4>
-                                        <p class="text-base font-medium text-gray-900">Rp ${parseFloat(data.total_amount).toLocaleString('id-ID')}</p>
-                                    </div>
-                                </div>`;
-                            
-                            orderDetailsContent.innerHTML = content;
-                            modal.classList.remove('hidden');
-                        })
-                        .catch(error => {
-                            console.error('Error fetching order details:', error);
-                            orderDetailsContent.innerHTML = '<p class="text-red-500">Error loading order details. Please try again.</p>';
-                            modal.classList.remove('hidden');
-                        });
+            const modalButtons = document.querySelectorAll('[data-modal-toggle]');
+            const closeButtons = document.querySelectorAll('[data-modal-hide]');
+            
+            modalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    }
                 });
             });
-
+            
             closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    modal.classList.add('hidden');
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-hide');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
                 });
-            });
-
-            // Close modal when clicking outside
-            modal.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.classList.add('hidden');
-                }
             });
         });
     </script>
