@@ -28,3 +28,4 @@ Route::middleware(['auth', \App\Http\Middleware\MitraMiddleware::class])->prefix
     Route::get('/orders/history', [MitraController::class, 'orderHistoryIndex'])->name('orders.history.index');
     Route::get('/orders/history/{orderHistory}', [MitraController::class, 'orderHistoryShow'])->name('orders.history.show');
 });
+

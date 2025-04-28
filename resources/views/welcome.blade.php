@@ -40,7 +40,7 @@
 
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex items-center space-x-4">
-                    <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-comment-alt"></i></a>
+                    <a href="/chatify" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-comment-alt"></i></a>
                     <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="fas fa-shopping-bag"></i></a>
                     <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-bell"></i></a>
                     <img src="{{ asset('img/id.png') }}" alt="Indonesian Flag" class="w-8 h-5 shadow-md rounded-sm">
@@ -156,8 +156,10 @@
     <section class="w-full py-12 px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between">
         <div class="md:w-1/2 mb-8 md:mb-0">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                Dive into Delights<br>
-                Of Delectable <span class="text-secondary">Food</span>
+                <p class="text-lg mb-6">Lindungi Bumi, Mulai <span class="text-secondary">Food Waste</span> Sekarang!</p>
+                Save <span class="text-secondary">Food</span><br>
+                Save Budget<br>
+                Save Planet<br>
             </h1>
             <p class="text-lg mb-6">Sisa Rasa: Selamatkan Rasa, Kurangi Sisa!</p>
         </div>

@@ -30,3 +30,17 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/mitra.php';
+
+//Route Chat
+use App\Http\Controllers\ChatController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{id}/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/chat/start/{userId}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::get('/chat', function () {
+    return view('chat.show');
+    });
+    
+});
