@@ -41,7 +41,7 @@
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex items-center space-x-4">
                     <a href="/chatify" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-comment-alt"></i></a>
-                    <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="fas fa-shopping-bag"></i></a>
+                    <a href="{{ route('cart.index') }}" class="text-xl text-gray-500 hover:text-gray-700"><i class="fas fa-shopping-bag"></i></a>
                     <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-bell"></i></a>
                     <img src="{{ asset('img/id.png') }}" alt="Indonesian Flag" class="w-8 h-5 shadow-md rounded-sm">
                     
