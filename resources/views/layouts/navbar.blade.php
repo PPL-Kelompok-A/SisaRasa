@@ -32,7 +32,7 @@
                         <a href="#lokasi" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Lokasi') }}
                         </a>
-                        <a href="#riwayat" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                        <a href="{{ route('riwayat.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Riwayat') }}
                         </a>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="flex items-center sm:hidden">
                     <div class="flex items-center space-x-1">
                         <a href="#" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="far fa-comment-alt"></i></a>
-                        <a href="#" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="fas fa-shopping-bag"></i></a>
+                        <a href="{{ route('cart.index') }}" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="fas fa-shopping-bag"></i></a>
                         <a href="#" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="far fa-bell"></i></a>
                         <img src="{{ asset('img/id.png') }}" alt="Indonesian Flag" class="w-6 h-4 shadow-md rounded-sm mx-1">
                     </div>
@@ -115,7 +115,7 @@
                 <a href="#lokasi" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     {{ __('Lokasi') }}
                 </a>
-                <a href="#riwayat" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                <a href="{{ route('riwayat.index') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     {{ __('Riwayat') }}
                 </a>
             </div>
