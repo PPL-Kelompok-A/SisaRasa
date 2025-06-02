@@ -7,12 +7,10 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CartController;
-<<<<<<< HEAD
 use App\Http\Controllers\MenuController;
-=======
 use App\Http\Controllers\HistoryController;
 
->>>>>>> 17b3cffa6c890675867196f420d995c97e57a916
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -68,11 +66,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Payment routes
-Route::middleware(['auth', 'verified'])->prefix('payment')->group(function () {
-    Route::get('/', [PaymentController::class, 'showPaymentPage'])->name('payment');
-    Route::get('/details/{methodId}', [PaymentController::class, 'getPaymentDetails'])->name('payment.details');
-    Route::post('/process', [PaymentController::class, 'processPayment'])->name('payment.process');
-});
+// Route::middleware(['auth', 'verified'])->prefix('payment')->group(function () {
+//     Route::get('/', [PaymentController::class, 'showPaymentPage'])->name('payment');
+//     Route::get('/details/{methodId}', [PaymentController::class, 'getPaymentDetails'])->name('payment.details');
+//     Route::post('/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+// });
 
 
 Route::get('/daftarmenu/menu', function () {
