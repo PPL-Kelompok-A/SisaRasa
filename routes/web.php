@@ -7,11 +7,13 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CartController;
-
+use App\Http\Controllers\MenuController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 // Main dashboard route with role-based redirection
 Route::get('/dashboard', function () {
@@ -60,4 +62,25 @@ Route::middleware(['auth', 'verified'])->prefix('payment')->group(function () {
 });
 
 
+Route::get('/daftarmenu/menu', function () {
+    $menus = [
+        [
+            'name' => 'Egg vegi salad',
+            'desc' => 'Description of the item',
+            'price' => 'Rp.11k',
+            'rating' => 5,
+            'image' => 'salad.png',
+            'repeat' => 3
+        ],
+        [
+            'name' => 'Itally Pizza',
+            'desc' => 'dengan saus tomat segar, mozzarella di bufala, dan basil segar',
+            'price' => 'Rp.30k',
+            'rating' => 5,
+            'image' => 'pizza.png',
+            'repeat' => 6
+        ],
+    ];
 
+    return view('menu', compact('menus'));
+});
