@@ -43,7 +43,7 @@ class MenuController extends Controller
         if ($request->filled('sort')) {
             $sortDirection = $request->input('sort');
             if (in_array(strtolower($sortDirection), ['asc', 'desc'])) {
-                $query->orderBy('harga', strtolower($sortDirection));
+                $query->orderBy('price', strtolower($sortDirection));
             }
         } else {
             // Pengurutan default jika tidak ada parameter 'sort'
