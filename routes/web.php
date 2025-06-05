@@ -17,6 +17,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/menu/{id}', [MenuController::class, 'show'])->name('foods.show');
 
 // Main dashboard route with role-based redirection
 Route::get('/dashboard', function () {
