@@ -18,6 +18,8 @@ class Food extends Model
         'price',
         'image',
         'is_available',
+        'category', 
+        'rating',
         'on_flash_sale',
         'discount_price',
         'discount_percentage',

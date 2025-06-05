@@ -172,15 +172,9 @@ class MitraController extends Controller
         $validated['is_available'] = $request->has('is_available') ? true : false;
 
         if ($request->hasFile('image')) {
-            // Ensure the storage directory exists
-            if (!file_exists(storage_path('app/public/foods'))) {
-                mkdir(storage_path('app/public/foods'), 0755, true);
-            }
-            
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(storage_path('app/public/foods'), $filename);
-            $validated['image'] = 'foods/' . $filename;
+            // Simpan file ke storage/app/public/foods
+            $path = $request->file('image')->store('foods', 'public');
+            $validated['image'] = $path;
         }
 
         $validated['user_id'] = Auth::id();
