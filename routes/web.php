@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\UlasanController;
 
 
 
@@ -73,6 +74,9 @@ Route::middleware(['auth'])->group(function () {
 //     Route::post('/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 // });
 
+
+// Ulasan produk route
+Route::get('/ulasan-produk', [UlasanController::class, 'create'])->name('ulasan.form');
 
 Route::get('/daftarmenu/menu', function () {
     $menus = [

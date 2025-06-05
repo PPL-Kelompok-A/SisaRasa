@@ -22,30 +22,35 @@ class FoodSeeder extends Seeder
                 'description' => 'Cimol dengan bumbu original yang gurih dan renyah',
                 'price' => 10000,
                 'is_available' => true,
+                'category' => 'non-vegetarian',
             ],
             [
                 'name' => 'Cimol Pedas',
                 'description' => 'Cimol dengan bumbu pedas yang menggugah selera',
                 'price' => 12000,
                 'is_available' => true,
+                'category' => 'non-vegetarian',
             ],
             [
                 'name' => 'Cimol Keju',
                 'description' => 'Cimol dengan taburan keju yang melimpah',
                 'price' => 15000,
                 'is_available' => true,
+                'category' => 'non-vegetarian',
             ],
             [
                 'name' => 'Cimol BBQ',
                 'description' => 'Cimol dengan bumbu BBQ yang lezat',
                 'price' => 13000,
                 'is_available' => false,
+                'category' => 'non-vegetarian',
             ],
             [
                 'name' => 'Cimol Seaweed',
                 'description' => 'Cimol dengan taburan rumput laut yang gurih',
                 'price' => 14000,
                 'is_available' => true,
+                'category' => 'vegetarian',
             ],
         ];
 
