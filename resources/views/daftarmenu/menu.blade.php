@@ -191,6 +191,7 @@
     @endif
 </div>
 
+                        <i class="fa-solid fa-utensils" title="Non-Vegetarian/Umum"></i>
                     @endif
                 </div>
                 <p>{{ Str::limit($makanan->description, 60) }}</p>

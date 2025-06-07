@@ -6,6 +6,8 @@
     <title>SisaRasa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="//unpkg.com/alpinejs" defer></script>
+    @stack('styles')
 </head>
 <body class="bg-white min-h-screen font-sans text-gray-900">
     <!-- Navbar -->    
@@ -23,16 +25,16 @@
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <a href="/" class="inline-flex items-center px-1 pt-1 border-b-2 border-secondary text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-secondary transition duration-150 ease-in-out">
+                        <a href="/" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->is('/') ? 'border-secondary text-gray-900' : 'border-transparent text-gray-500' }} text-sm font-medium leading-5 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Beranda') }}
                         </a>
-                        <a href="#menu" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                        <a href="/menu" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->is('menu') ? 'border-secondary text-gray-900' : 'border-transparent text-gray-500' }} text-sm font-medium leading-5 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Menu') }}
                         </a>
-                        <a href="#lokasi" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                        <a href="/lokasi" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->is('lokasi') ? 'border-secondary text-gray-900' : 'border-transparent text-gray-500' }} text-sm font-medium leading-5 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Lokasi') }}
                         </a>
-                        <a href="{{ route('riwayat.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                        <a href="{{ route('riwayat.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('riwayat.index') ? 'border-secondary text-gray-900' : 'border-transparent text-gray-500' }} text-sm font-medium leading-5 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             {{ __('Riwayat') }}
                         </a>
                     </div>
@@ -109,10 +111,10 @@
                 <a href="/" class="block w-full ps-3 pe-4 py-2 border-l-4 border-secondary text-start text-base font-medium text-gray-700 bg-secondary/10 focus:outline-none focus:text-gray-800 focus:bg-secondary/10 focus:border-secondary transition duration-150 ease-in-out">
                     {{ __('Beranda') }}
                 </a>
-                <a href="#menu" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                <a href="/menu" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     {{ __('Menu') }}
                 </a>
-                <a href="#lokasi" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                <a href="/lokasi" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                     {{ __('Lokasi') }}
                 </a>
                 <a href="{{ route('riwayat.index') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -158,5 +160,6 @@
             @yield('content')
         </div>
     </main>
+    @stack('scripts')
 </body>
 </html>
