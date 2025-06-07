@@ -1,30 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-<<<<<<< HEAD
-use App\Models\Food;
-=======
 
 use App\Models\Food; // Pastikan model Food Anda sudah di-import
->>>>>>> eb3aa324db03153ba9764643db28e4978c52abfc
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-<<<<<<< HEAD
-    public function index()
-    {
-        $foods = Food::all();
-        return view('daftarmenu.menu', compact('foods'));
-    }
-
-    public function show($id)
-    {
-        $food = Food::findOrFail($id);
-        return view('daftarmenu.show', compact('food'));
-    }
-}
-=======
     /**
      * Menampilkan daftar menu dengan filter, pencarian, dan pengurutan.
      *
@@ -80,4 +62,4 @@ class MenuController extends Controller
         return view('daftarmenu.menu', compact('foods'));
     }
 }
->>>>>>> eb3aa324db03153ba9764643db28e4978c52abfc
+

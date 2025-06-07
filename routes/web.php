@@ -100,3 +100,8 @@ Route::get('/daftarmenu/menu', function () {
 
     return view('menu', compact('menus'));
 });
+
+// Route untuk halaman lokasi
+Route::get('/lokasi', function () {
+    return view('mitra.lokasi');
+})->name('lokasi');

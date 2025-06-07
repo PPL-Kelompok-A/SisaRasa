@@ -159,26 +159,7 @@
                     @if($makanan->category == 'vegetarian')
                         <i class="fa fa-leaf" title="Vegetarian"></i>
                     @else
-<<<<<<< HEAD
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-                   <div class="icons">
-    @if($makanan->category == 'vegetarian')
-        <i class="fa fa-leaf" title="Vegetarian"></i>
-    @else
-        <!-- Tombol ikon mata -->
-        <a href="{{ route('foods.show', $makanan->id) }}" title="Lihat Detail" style="background: none; border: none; cursor: pointer; padding: 5px; display:inline-block;">
-            <i class="fa-solid fa-eye" style="color: #12544e; font-size: 20px;"></i>
-        </a>
-        <!-- Tombol ikon keranjang -->
-        <button onclick="alert('Tambah ke keranjang')" style="background: none; border: none; cursor: pointer; padding: 5px;">
-            <i class="fa-solid fa-cart-plus" style="color: #12544e; font-size: 20px;"></i>
-        </button>
-    @endif
-</div>
-
-=======
                         <i class="fa-solid fa-utensils" title="Non-Vegetarian/Umum"></i>
->>>>>>> eb3aa324db03153ba9764643db28e4978c52abfc
                     @endif
                 </div>
                 <p>{{ Str::limit($makanan->description, 60) }}</p>

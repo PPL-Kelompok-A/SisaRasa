@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -34,6 +35,11 @@ class User extends Authenticatable
     public function isMitra()
     {
         return $this->role === self::ROLE_MITRA;
+    }
+
+    public function mitraDetail(): HasOne
+    {
+        return $this->hasOne(MitraDetail::class);
     }
 
     /**

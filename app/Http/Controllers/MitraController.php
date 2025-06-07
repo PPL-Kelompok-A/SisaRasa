@@ -212,19 +212,12 @@ class MitraController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($food->image && file_exists(storage_path('app/public/' . $food->image))) {
-                unlink(storage_path('app/public/' . $food->image));
+            if ($food->image) {
+                Storage::disk('public')->delete($food->image);
             }
             
-            // Ensure the storage directory exists
-            if (!file_exists(storage_path('app/public/foods'))) {
-                mkdir(storage_path('app/public/foods'), 0755, true);
-            }
-            
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(storage_path('app/public/foods'), $filename);
-            $validated['image'] = 'foods/' . $filename;
+            // Store the new image
+            $validated['image'] = $request->file('image')->store('foods', 'public');
         }
 
         $food->update($validated);
@@ -241,8 +234,8 @@ class MitraController extends Controller
         }
 
         // Delete the image file if it exists
-        if ($food->image && file_exists(storage_path('app/public/' . $food->image))) {
-            unlink(storage_path('app/public/' . $food->image));
+        if ($food->image) {
+            Storage::disk('public')->delete($food->image);
         }
 
         $food->delete();
