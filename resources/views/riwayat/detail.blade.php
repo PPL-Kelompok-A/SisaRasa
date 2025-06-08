@@ -131,18 +131,47 @@
         .copy-btn:hover {
             text-decoration: underline;
         }
-        .back-button {
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .back-button, .review-button {
             display: inline-block;
-            background-color: #0a5c36;
-            color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .back-button {
+            background-color: #6c757d;
+            color: white;
         }
         .back-button:hover {
-            background-color: #064c2d;
+            background-color: #5a6268;
+        }
+        .review-button {
+            background-color: #ff6b00;
+            color: white;
+        }
+        .review-button:hover {
+            background-color: #e55a00;
+        }
+        @media (max-width: 600px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .back-button, .review-button {
+                width: 100%;
+                max-width: 200px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -214,8 +243,9 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 30px;">
+        <div class="action-buttons" style="margin-top: 30px;">
             <a href="{{ route('riwayat.index') }}" class="back-button">← Kembali</a>
+            <a href="{{ route('riwayat.ulasan', $order->id) }}" class="review-button">⭐ Buat Ulasan</a>
         </div>
     </div>
 </div>
