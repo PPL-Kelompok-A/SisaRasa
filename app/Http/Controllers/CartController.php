@@ -3,10 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
+use App\Models\Food;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
+    public function add(Request $request)
+    {
+        $food = Food::findOrFail($request->food_id);
+
+        // Cek apakah sudah ada di cart (bisa juga pakai user_id jika multi user)
+        $cartItem = CartItem::where('name', $food->name)->first();
+        if ($cartItem) {
+            $cartItem->quantity += 1;
+            $cartItem->save();
+        } else {
+            CartItem::create([
+                'name' => $food->name,
+                'desc' => $food->description,
+                'price' => $food->price,
+                'img' => $food->image ? Storage::url($food->image) : asset('images/default-food.png'),
+                'quantity' => 1,
+                'selected' => false,
+            ]);
+        }
+
+        return back()->with('success', 'Berhasil ditambahkan ke keranjang!');
+    }
+
     public function index()
     {
         $cartItems = CartItem::all();

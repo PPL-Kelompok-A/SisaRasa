@@ -9,12 +9,12 @@
             padding: 0;
         }
         .menu-filters {
-            display: flex; /* Ini penting untuk alignment */
+            display: flex;
             gap: 16px;
             max-width: 1200px;
             margin: 32px auto 0 auto;
             padding: 0 16px;
-            align-items: center; /* Agar semua item di dalamnya (select, input, tombol) sejajar secara vertikal */
+            align-items: center;
         }
         .menu-filters select,
         .menu-filters input[type="text"] {
@@ -25,31 +25,24 @@
             background: #fff;
             min-width: 120px;
         }
-        /* CSS untuk tombol Reset Filter */
         .btn-reset-filter {
             display: inline-block;
             padding: 8px 15px;
-            background-color: #dc3545; /* Warna merah solid */
-            color: white !important; /* Tulisan warna putih, !important untuk memastikan override jika ada style lain */
+            background-color: #dc3545;
+            color: white !important;
             text-align: center;
             text-decoration: none;
             border-radius: 6px;
             font-size: 14px;
-            border: none; /* Hapus border default atau sesuaikan jika ingin border sewarna */
-            /* border: 1px solid #dc3545; /* Jika ingin border sewarna dengan background */
+            border: none;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin-left: auto; /* INI KUNCINYA untuk mendorong tombol ke kanan */
+            margin-left: auto;
         }
-
         .btn-reset-filter:hover {
-            background-color: #c82333; /* Warna merah lebih gelap saat hover */
-            /* border-color: #bd2130; /* Jika menggunakan border */
+            background-color: #c82333;
             color: white !important;
         }
-        /* Akhir CSS untuk tombol Reset Filter */
-
-        /* ... sisa CSS Anda yang sudah ada ... */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -96,8 +89,9 @@
         }
         .menu-card .icons {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             margin-bottom: 12px;
+            align-items: center;
         }
         .menu-card .icons i {
             font-size: 18px;
@@ -127,11 +121,26 @@
             margin-right: 4px;
             font-size: 18px;
         }
+        
+        /* Style untuk tombol aksi */
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .action-btn:hover {
+            background-color: rgba(18, 84, 78, 0.1);
+        }
+        .action-btn i {
+            color: #12544e;
+            font-size: 20px;
+        }
     </style>
 
     <form method="GET" action="{{ route('menu.index') }}" class="menu-filters">
-        {{-- Asumsi Anda memiliki route bernama 'menu.index' untuk halaman ini --}}
-        {{-- Jika tidak, ganti action dengan {{ url('/menu') }} atau URL yang sesuai --}}
         <select name="category">
             <option value="">Kategori</option>
             <option value="vegetarian" {{ request('category')=='vegetarian' ? 'selected' : '' }}>Vegetarian</option>
@@ -143,11 +152,9 @@
             <option value="desc" {{ request('sort')=='desc' ? 'selected' : '' }}>Termahal</option>
         </select>
         <input type="text" name="search" placeholder="Cari menu..." value="{{ request('search') }}">
-        <button type="submit" style="display:none"></button> {{-- Tombol submit filter utama (bisa disembunyikan) --}}
+        <button type="submit" style="display:none"></button>
 
-        {{-- Tombol Reset Semua Filter ditempatkan di sini, di dalam form agar sejajar dan bisa didorong ke kanan --}}
         <a href="{{ route('menu.index') }}" class="btn btn-reset-filter">Reset Semua Filter</a>
-        {{-- Ganti 'menu.index' dengan nama route halaman menu Anda jika berbeda --}}
     </form>
 
     <div class="menu-grid">
@@ -155,45 +162,30 @@
             <div class="menu-card">
                 <img src="{{ $makanan->image ? Storage::url($makanan->image) : asset('images/default-food.png') }}" alt="{{ $makanan->name }}">
                 <h4>{{ $makanan->name }}</h4>
+                
                 <div class="icons">
+                    {{-- Icon kategori --}}
                     @if($makanan->category == 'vegetarian')
                         <i class="fa fa-leaf" title="Vegetarian"></i>
-                          <!-- Tombol ikon mata -->
-        <a href="{{ route('foods.show', $makanan->id) }}" title="Lihat Detail" style="background: none; border: none; cursor: pointer; padding: 5px; display:inline-block;">
-            <i class="fa-solid fa-eye" style="color: #12544e; font-size: 20px;"></i>
-        </a>
-        <!-- Tombol ikon keranjang -->
-        <button onclick="alert('Tambah ke keranjang')" style="background: none; border: none; cursor: pointer; padding: 5px;">
-            <i class="fa-solid fa-cart-plus" style="color: #12544e; font-size: 20px;"></i>
-        </button>
                     @else
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-                   <div class="icons">
-    @if($makanan->category == 'vegetarian')
-        <i class="fa fa-leaf" title="Vegetarian"></i>
-          <!-- Tombol ikon mata -->
-        <a href="{{ route('foods.show', $makanan->id) }}" title="Lihat Detail" style="background: none; border: none; cursor: pointer; padding: 5px; display:inline-block;">
-            <i class="fa-solid fa-eye" style="color: #12544e; font-size: 20px;"></i>
-        </a>
-        <!-- Tombol ikon keranjang -->
-        <button onclick="alert('Tambah ke keranjang')" style="background: none; border: none; cursor: pointer; padding: 5px;">
-            <i class="fa-solid fa-cart-plus" style="color: #12544e; font-size: 20px;"></i>
-        </button>
-    @else
-        <!-- Tombol ikon mata -->
-        <a href="{{ route('foods.show', $makanan->id) }}" title="Lihat Detail" style="background: none; border: none; cursor: pointer; padding: 5px; display:inline-block;">
-            <i class="fa-solid fa-eye" style="color: #12544e; font-size: 20px;"></i>
-        </a>
-        <!-- Tombol ikon keranjang -->
-        <button onclick="alert('Tambah ke keranjang')" style="background: none; border: none; cursor: pointer; padding: 5px;">
-            <i class="fa-solid fa-cart-plus" style="color: #12544e; font-size: 20px;"></i>
-        </button>
-    @endif
-</div>
-
                         <i class="fa-solid fa-utensils" title="Non-Vegetarian/Umum"></i>
                     @endif
+                    
+                    {{-- Tombol lihat detail --}}
+                    <a href="{{ route('foods.show', $makanan->id) }}" title="Lihat Detail" class="action-btn">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    
+                    {{-- Form tambah ke keranjang --}}
+                    <form action="{{ route('cart.add') }}" method="POST" style="display:inline;">
+                        @csrf
+                        <input type="hidden" name="food_id" value="{{ $makanan->id }}">
+                        <button type="submit" title="Tambah ke Keranjang" class="action-btn">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </button>
+                    </form>
                 </div>
+                
                 <p>{{ Str::limit($makanan->description, 60) }}</p>
                 <div class="price-rating">
                     <span class="price">Rp{{ number_format($makanan->price, 0, ',', '.') }}</span>
@@ -206,5 +198,28 @@
         @endforeach
     </div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {{-- Success/Error Messages --}}
+    @if(session('success'))
+        <div class="alert alert-success" style="position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 12px 16px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px;">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                document.querySelector('.alert-success').style.display = 'none';
+            }, 3000);
+        </script>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error" style="position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 12px 16px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px;">
+            {{ session('error') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                document.querySelector('.alert-error').style.display = 'none';
+            }, 3000);
+        </script>
+    @endif
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection

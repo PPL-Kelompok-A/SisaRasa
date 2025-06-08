@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
     // Cart
 Route::middleware(['auth'])->group(function () {
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/{id}/quantity', [CartController::class, 'updateQuantity']);
     Route::post('/cart/{id}/select', [CartController::class, 'toggleSelect']);
@@ -53,9 +54,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat/{id}', [HistoryController::class, 'show'])->name('riwayat.detail');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat.index');
-}); 
+    Route::get('/riwayat/{order}', [HistoryController::class, 'create'])->name('riwayat.ulasan');
+});
 
-// Include additional route files
 require __DIR__.'/auth.php';
 require __DIR__.'/mitra.php';
 
