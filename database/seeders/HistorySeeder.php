@@ -11,22 +11,33 @@ class HistorySeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\history::create([
-            'name' => 'Italy Pizza',
+        \App\Models\History::create([
+            'name' => 'Cimol Original',
             'status' => 'Completed',
             'quantity' => 1,
-            'price' => 30000,
-            'image' => 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/2caca97b-77f6-48e7-837d-62642c0c9861/Derivates/12591894-e010-4a02-b04e-2627d8374298.jpg',
+            'price' => 8000,
+            'image' => 'images/bbq.jpg',
             'payment_method' => 'Dana'
         ]);
 
         \App\Models\History::create([
-            'name' => 'Original Pizza',
+            'name' => 'Cimol Pedas',
+            'status' => 'Completed',
+            'quantity' => 2,
+            'price' => 10000,
+            'image' => 'images/cimol2.jpg',
+            'payment_method' => 'Ovo'
+        ]);
+
+        \App\Models\History::create([
+            'name' => 'Cimol Keju',
             'status' => 'Completed',
             'quantity' => 1,
-            'price' => 25000,
-            'image' => 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/2caca97b-77f6-48e7-837d-62642c0c9861/Derivates/12591894-e010-4a02-b04e-2627d8374298.jpg',
-            'payment_method' => 'Ovo'
+            'price' => 12000,
+            'image' => 'images/cimol-keju-lumer-1.jpeg',
+            'payment_method' => 'Dana'
         ]);
     }
 }
+
+//php artisan db:seed --class=HistorySeeder
