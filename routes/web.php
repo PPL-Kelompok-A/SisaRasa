@@ -83,12 +83,10 @@ Route::middleware(['auth'])->group(function () {
     // 2. Route untuk MENYIMPAN data saat form ulasan di-submit.
     Route::post('/ulasan/store', [UlasanController::class, 'store'])->name('ulasan.store');
 });
-// --- PENAMBAHAN SELESAI ---
 
-
-// --- PERUBAHAN DI SINI ---
-// Route lama ini sudah tidak diperlukan karena digantikan oleh route dinamis di atas.
-// Route::get('/ulasan-produk', [UlasanController::class, 'create'])->name('ulasan.form');
+// Ulasan Pembeli
+    Route::get('/riwayat/{order}/ulasan/buat', [UlasanController::class, 'create'])->name('riwayat.ulasan');
+    Route::post('/ulasan/store', [UlasanController::class, 'store'])->name('ulasan.store');
 
 Route::get('/daftarmenu/menu', function () {
     $menus = [

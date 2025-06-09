@@ -35,4 +35,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function ulasan()
+    {
+        // Satu pesanan punya satu ulasan
+        return $this->hasOne(Ulasan::class);
+    }
 }

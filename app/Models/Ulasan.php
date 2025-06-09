@@ -29,4 +29,13 @@ class Ulasan extends Model
     protected $casts = [
         'reasons' => 'array',
     ];
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

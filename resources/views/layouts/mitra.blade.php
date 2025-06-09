@@ -41,6 +41,10 @@
                                class="{{ request()->routeIs('mitra.orders.history.*') ? 'border-secondary text-secondary' : 'border-transparent text-gray-500 hover:text-secondary hover:border-secondary' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Riwayat Pesanan
                             </a>
+                            <a href="{{ route('mitra.ulasan.index') }}" 
+                            class="{{ request()->routeIs('mitra.ulasan.index') ? 'border-secondary text-secondary' : 'border-transparent text-gray-500 hover:text-secondary hover:border-secondary' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Ulasan Pembeli
+                            </a>
                         </div>
                     </div>
                     
@@ -110,6 +114,10 @@
                         <a href="{{ route('mitra.orders.history.index') }}" 
                            class="{{ request()->routeIs('mitra.orders.history.*') ? 'bg-secondary text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-secondary' }} block px-3 py-2 rounded-md text-base font-medium">
                             Riwayat Pesanan
+                        </a>
+                        <a href="{{ route('mitra.ulasan.index') }}" 
+                        class="{{ request()->routeIs('mitra.ulasan.index') ? 'bg-secondary text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-secondary' }} block px-3 py-2 rounded-md text-base font-medium">
+                            Ulasan Pembeli
                         </a>
                     </div>
                     

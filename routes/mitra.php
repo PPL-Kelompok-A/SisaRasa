@@ -27,5 +27,9 @@ Route::middleware(['auth', \App\Http\Middleware\MitraMiddleware::class])->prefix
     // Order History
     Route::get('/orders/history', [MitraController::class, 'orderHistoryIndex'])->name('orders.history.index');
     Route::get('/orders/history/{orderHistory}', [MitraController::class, 'orderHistoryShow'])->name('orders.history.show');
+
+    //nisa
+    Route::get('/ulasan-pembeli', [MitraController::class, 'semuaUlasan'])->name('ulasan.index');
+
 });
 

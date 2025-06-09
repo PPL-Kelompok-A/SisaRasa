@@ -29,4 +29,11 @@ class OrderHistory extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function ulasan()
+    {
+    // Relasi ini memberitahu:
+    // "Satu OrderHistory bisa memiliki satu Ulasan"
+    // Kita menghubungkannya melalui kolom 'order_id' di kedua tabel.
+    return $this->hasOne(Ulasan::class, 'order_id', 'order_id');
+    }
 }

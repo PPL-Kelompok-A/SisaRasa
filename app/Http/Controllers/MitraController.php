@@ -6,6 +6,7 @@ use App\Models\Food;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\User;
+use App\Models\Ulasan; // <--- 1. TAMBAHKAN INI untuk memanggil Model Ulasan
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 
 class MitraController extends Controller
 {
+    // ... (SEMUA METHOD LAMA DARI public function dashboard() SAMPAI public function orderHistoryShow() TETAP SAMA DAN TIDAK DIUBAH) ...
+    
     public function dashboard()
     {
         $user = Auth::user();
@@ -418,6 +421,7 @@ class MitraController extends Controller
     {
         $user = auth()->user();
         $orderHistories = OrderHistory::where('user_id', $user->id)
+            ->with('ulasan')
             ->orderBy('completed_at', 'desc')
             ->paginate(10);
             
@@ -455,5 +459,20 @@ class MitraController extends Controller
             'customer_name' => $orderHistory->user->name ?? 'Unknown Customer',
             'delivery_address' => $orderHistory->delivery_address ?? 'No address provided'
         ]);
+    }
+    public function semuaUlasan()
+    {
+        // 1. Dapatkan data mitra yang sedang login
+        $mitra = Auth::user();
+
+        // 2. Ambil semua ulasan yang terhubung ke pesanan milik mitra ini.
+        $ulasan = Ulasan::whereHas('order', function($query) use ($mitra) {
+            $query->where('mitra_id', $mitra->id);
+        })
+        ->with(['user', 'order.items.food']) // Ambil juga data user & produk
+        ->latest() // Urutkan dari yang terbaru
+        ->paginate(15); // Tampilkan 15 ulasan per halaman
+
+        return view('mitra.ulasan', compact('ulasan'));
     }
 }
