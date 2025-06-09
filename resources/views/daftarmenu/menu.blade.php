@@ -140,17 +140,23 @@
         }
     </style>
 
-    <form method="GET" action="{{ route('menu.index') }}" class="menu-filters">
-        <select name="category">
+    {{-- PERUBAHAN 1: Tambahkan id pada tag <form> --}}
+    <form id="menuFilterForm" method="GET" action="{{ route('menu.index') }}" class="menu-filters">
+        
+        {{-- PERUBAHAN 2: Tambahkan class pada tag <select> --}}
+        <select name="category" class="auto-submit-filter">
             <option value="">Kategori</option>
             <option value="vegetarian" {{ request('category')=='vegetarian' ? 'selected' : '' }}>Vegetarian</option>
             <option value="non-vegetarian" {{ request('category')=='non-vegetarian' ? 'selected' : '' }}>Non-Vegetarian</option>
         </select>
-        <select name="sort">
+
+        {{-- PERUBAHAN 2: Tambahkan class pada tag <select> --}}
+        <select name="sort" class="auto-submit-filter">
             <option value="">Harga</option>
             <option value="asc" {{ request('sort')=='asc' ? 'selected' : '' }}>Termurah</option>
             <option value="desc" {{ request('sort')=='desc' ? 'selected' : '' }}>Termahal</option>
         </select>
+        
         <input type="text" name="search" placeholder="Cari menu..." value="{{ request('search') }}">
         <button type="submit" style="display:none"></button>
 
@@ -222,4 +228,18 @@
     @endif
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {{-- PERUBAHAN 3: Tambahkan blok JavaScript ini di bagian paling akhir --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('menuFilterForm');
+            const filterSelects = document.querySelectorAll('.auto-submit-filter');
+
+            filterSelects.forEach(function(selectElement) {
+                selectElement.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            });
+        });
+    </script>
 @endsection
