@@ -52,9 +52,12 @@ Route::middleware(['auth'])->group(function () {
 
 //history
 Route::middleware(['auth'])->group(function () {
-    Route::get('/riwayat/{id}', [HistoryController::class, 'show'])->name('riwayat.detail');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat.index');
-    Route::get('/riwayat/{order}', [HistoryController::class, 'create'])->name('riwayat.ulasan');
+    Route::get('/riwayat/{id}', [HistoryController::class, 'show'])->name('riwayat.detail');
+    
+    // --- PERUBAHAN DI SINI ---
+    // Route untuk ulasan yang lama dihapus karena URL-nya konflik dan digantikan dengan yang baru di bawah.
+    // Route::get('/riwayat/{order}', [HistoryController::class, 'create'])->name('riwayat.ulasan');
 });
 
 require __DIR__.'/auth.php';
@@ -68,16 +71,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat/start/{userId}', [ChatController::class, 'startChat'])->name('chat.start');
 });
 
-// Payment routes
-// Route::middleware(['auth', 'verified'])->prefix('payment')->group(function () {
-//     Route::get('/', [PaymentController::class, 'showPaymentPage'])->name('payment');
-//     Route::get('/details/{methodId}', [PaymentController::class, 'getPaymentDetails'])->name('payment.details');
-//     Route::post('/process', [PaymentController::class, 'processPayment'])->name('payment.process');
-// });
+
+// --- PENAMBAHAN ROUTE ULASAN ANDA DI SINI ---
+Route::middleware(['auth'])->group(function () {
+    // 1. Route untuk MENAMPILKAN halaman form ulasan.
+    //    URL diubah menjadi lebih unik ('/ulasan/buat') agar tidak bentrok dengan route detail riwayat.
+    //    Nama 'riwayat.ulasan' tetap sama agar kode teman Anda tidak perlu diubah.
+    //    Diarahkan ke UlasanController@create yang akan Anda kelola.
+    Route::get('/riwayat/{order}/ulasan/buat', [UlasanController::class, 'create'])->name('riwayat.ulasan');
+
+    // 2. Route untuk MENYIMPAN data saat form ulasan di-submit.
+    Route::post('/ulasan/store', [UlasanController::class, 'store'])->name('ulasan.store');
+});
+// --- PENAMBAHAN SELESAI ---
 
 
-// Ulasan produk route
-Route::get('/ulasan-produk', [UlasanController::class, 'create'])->name('ulasan.form');
+// --- PERUBAHAN DI SINI ---
+// Route lama ini sudah tidak diperlukan karena digantikan oleh route dinamis di atas.
+// Route::get('/ulasan-produk', [UlasanController::class, 'create'])->name('ulasan.form');
 
 Route::get('/daftarmenu/menu', function () {
     $menus = [

@@ -2,48 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;   // 1. Tambahkan ini untuk menggunakan model Order
+use App\Models\Ulasan;  // 2. Tambahkan ini untuk menyimpan ulasan (pastikan modelnya ada)
 use Illuminate\Http\Request;
-// Jika Anda akan mengambil data produk untuk diulas, Anda mungkin perlu model Food atau Product
-// use App\Models\Food; // atau model produk Anda yang lain
 
 class UlasanController extends Controller
 {
-    public function create() // atau nama metode Anda, misalnya showReviewPage()
+    /**
+     * Method ini akan MENAMPILKAN halaman form ulasan.
+     *
+     * @param \App\Models\Order $order
+     * @return \Illuminate\View\View
+     */
+    public function create(Order $order) // 3. Terima variabel $order dari Route
     {
-        // ... (logika lain jika ada) ...
-
-        // Ubah baris ini:
-        // return view('ulasan_produk'); << GANTI INI
-
-        // Menjadi ini:
-        return view('ulasan.ulasan'); // Sesuai dengan path resources/views/ulasan/ulasan.blade.php
+        // 4. Kirim data pesanan ($order) ke dalam view Anda.
+        //    'ulasan.ulasan' berarti file ada di resources/views/ulasan/ulasan.blade.php
+        return view('ulasan.ulasan', [
+            'order' => $order
+        ]);
     }
 
-    // ... (metode lain jika ada, seperti store() untuk menyimpan ulasan nantinya) ...
-}
-
     /**
-     * Menyimpan ulasan baru dari customer.
-     * (Ini untuk langkah selanjutnya saat Anda ingin menyimpan data ulasan)
+     * Method ini akan MENYIMPAN ulasan baru ke database.
+     * Method ini harus berada DI DALAM class UlasanController.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    // public function store(Request $request)
-    // {
-    //     // Validasi input
-    //     // $validatedData = $request->validate([
-    //     //     'product_id' => 'required|exists:foods,id', // atau tabel produk Anda
-    //     //     'rating' => 'required|integer|min:1|max:5',
-    //     //     'reasons' => 'nullable|array',
-    //     //     'comment' => 'nullable|string|max:1000',
-    //     // ]);
+    public function store(Request $request) // 5. Method store() dipindahkan ke dalam class
+    {
+        // Validasi input dari form ulasan
+        $validatedData = $request->validate([
+            'order_id' => 'required|exists:orders,id', // Pastikan order_id yang dikirim valid
+            'rating' => 'required|integer|min:1|max:5', // Contoh validasi untuk bintang rating
+            'comment' => 'nullable|string|max:1000',    // Contoh validasi untuk komentar
+            // Tambahkan validasi lain jika ada (misal: 'reasons')
+        ]);
 
-    //     // Simpan ulasan ke database
-    //     // Review::create([
-    //     //     'user_id' => auth()->id(), // Jika user harus login
-    //     //     'product_id' => $validatedData['product_id'],
-    //     //     'rating' => $validatedData['rating'],
-    //     //     'reasons' => $validatedData['reasons'],
-    //     //     'comment' => $validatedData['comment'],
-    //     // ]);
+        // Buat dan simpan ulasan ke database
+        // Pastikan Anda sudah membuat model `Ulasan`
+        Ulasan::create([
+            'user_id' => auth()->id(), // Menyimpan ID user yang sedang login
+            'order_id' => $validatedData['order_id'],
+            'rating' => $validatedData['rating'],
+            'comment' => $validatedData['comment'],
+            // tambahkan field lain jika ada
+        ]);
 
-    //     // return redirect()->back()->with('success', 'Terima kasih atas ulasan Anda!');
-    // }
+        // Alihkan pengguna ke halaman riwayat dengan pesan sukses
+        return redirect()->route('riwayat.index')->with('success', 'Terima kasih atas ulasan Anda!');
+    }
+}
