@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('foods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->string('image')->nullable();
             $table->boolean('is_available')->default(true);
+            $table->string('category')->nullable();
+            $table->decimal('rating', 2, 1)->nullable();
             $table->timestamps();
         });
     }
