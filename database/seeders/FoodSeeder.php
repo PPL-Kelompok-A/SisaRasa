@@ -10,9 +10,14 @@ class FoodSeeder extends Seeder
 {
     public function run(): void
     {
+        // Mencari user mitra, pastikan user ini ada di database Anda
+        // Anda bisa cek di tabel 'users' atau lewat seeder lain.
         $mitra = User::where('email', 'cimol@sisarasa.com')->first();
 
         if (!$mitra) {
+            // Jika mitra tidak ditemukan, hentikan seeder agar tidak error.
+            // Anda bisa tambahkan pesan ini untuk debugging:
+            // $this->command->warn('User mitra cimol@sisarasa.com tidak ditemukan, FoodSeeder dilewati.');
             return;
         }
 
@@ -61,6 +66,7 @@ class FoodSeeder extends Seeder
                 'description' => $food['description'],
                 'price' => $food['price'],
                 'is_available' => $food['is_available'],
+                'category' => $food['category'], // <-- TAMBAHKAN BARIS INI
             ]);
         }
     }
