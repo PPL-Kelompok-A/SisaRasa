@@ -24,22 +24,25 @@ class ChatController extends Controller
 
     public function show($id)
     {
-        $chat = Chat::findOrFail($id);
-        $chat = Chat::with('messages.sender')->findOrFail($id);
-        $chat = Chat::with('messages')->findOrFail($id);
-        $chats = Chat::all(); // untuk sidebar list
+           // Load chat lengkap dengan relasi messages + pengirim, dan kedua user chat
+    $chat = Chat::with('messages.sender', 'userOne', 'userTwo')->findOrFail($id);
 
-        if (Auth::id() !== $chat->user_one_id && Auth::id() !== $chat->user_two_id) {
-            abort(403, 'Unauthorized');
-        }
+    // Cek otorisasi, pastikan user saat ini bagian dari chat
+    if (Auth::id() !== $chat->user_one_id && Auth::id() !== $chat->user_two_id) {
+        abort(403, 'Unauthorized');
+    }
 
-        $chats = Chat::where('user_one_id', Auth::id())
-            ->orWhere('user_two_id', Auth::id())
-            ->with(['userOne', 'userTwo'])
-            ->get();
-        
+    // Ambil daftar semua chat yang berhubungan dengan user saat ini (untuk sidebar)
+    $chats = Chat::where('user_one_id', Auth::id())
+        ->orWhere('user_two_id', Auth::id())
+        ->with(['userOne', 'userTwo'])
+        ->get();
 
-        return view('chat.show', compact('chats', 'chat'));
+    // Tentukan user lawan sebagai receiver di tampilan
+    $receiver = $chat->user_one_id === Auth::id() ? $chat->userTwo : $chat->userOne;
+
+    // Kirim data ke view
+    return view('chat.show', compact('chats', 'chat', 'receiver'));
     }
 
     public function send(Request $request, $id)

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -17,22 +18,22 @@ class User extends Authenticatable
     const ROLE_MITRA = 'mitra';
     const ROLE_CUSTOMER = 'customer';
 
-    public function foods()
+    public function foods() : HasMany
     {
         return $this->hasMany(Food::class);
     }
 
-    public function orders()
+    public function orders() : HasMany
     {
         return $this->hasMany(Order::class, 'mitra_id');
     }
 
-    public function customerOrders()
+    public function customerOrders() : HasMany
     {
         return $this->hasMany(Order::class, 'user_id');
     }
 
-    public function isMitra()
+    public function isMitra() : bool
     {
         return $this->role === self::ROLE_MITRA;
     }
@@ -41,6 +42,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(MitraDetail::class);
     }
+    public function sentMessages()
+{
+    return $this->hasMany(Message::class, 'sender_id');
+}
+
 
     /**
      * The attributes that are mass assignable.

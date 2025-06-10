@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use App\Models\Food;
+use App\Models\Order; // Pastikan ini diimpor
+use App\Models\OrderItem; // Pastikan ini diimpor
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function add(Request $request)
     {
         $food = Food::findOrFail($request->food_id);
+
+        // --- PENAMBAHAN BAGIAN ANDA UNTUK MENCEGAH ERROR mitra_id ---
+        // Ini adalah validasi untuk memastikan Food yang ditambahkan memiliki mitra_id.
+        // Jika tidak ada, ia akan mengembalikan error ke pengguna.
+        if (is_null($food->mitra_id)) {
+            return back()->with('error', 'Gagal menambahkan item: Informasi mitra untuk makanan ini tidak ditemukan.');
+        }
+        // --- AKHIR PENAMBAHAN BAGIAN ANDA ---
 
         // Cek apakah sudah ada di cart (bisa juga pakai user_id jika multi user)
         $cartItem = CartItem::where('name', $food->name)->first();
@@ -26,6 +37,7 @@ class CartController extends Controller
                 'img' => $food->image ? Storage::url($food->image) : asset('images/default-food.png'),
                 'quantity' => 1,
                 'selected' => false,
+                'mitra_id' => $food->mitra_id, 
             ]);
         }
 
@@ -73,7 +85,35 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Pilih item yang akan di-checkout!');
         }
 
-        // Proses checkout dan kirim data ke backend jika perlu
-        return redirect()->route('cart.index')->with('success', 'Checkout sukses! Total: ' . number_format($total, 0, ',', '.'));
+        // Ambil mitra_id dari item pertama (jika semua item dari satu mitra)
+        // Perbaikan kecil: Ambil user_id dari Auth::id() karena 'user_id' di tabel 'orders'
+        $mitraId = $selectedItems->first()->mitra_id ?? null; // Tetap menggunakan ini
+
+        // Simpan order ke database
+        // Pastikan model Order dan OrderItem diimpor di bagian atas file
+        $order = Order::create([ // Menggunakan Order::create()
+            'user_id' => Auth::id(),
+            'mitra_id' => $mitraId,
+            'status' => 'pending', 
+            'total_amount' => $total,
+            'delivery_address' => 'alamat pengiriman', // Akan butuh inputan dari user
+        ]);
+
+        // Simpan item order
+        foreach ($selectedItems as $item) {
+            OrderItem::create([ // Menggunakan OrderItem::create()
+                'order_id' => $order->id,
+                'name' => $item->name,
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                // tambahkan kolom lain jika perlu
+            ]);
+        }
+
+        // (Opsional) Kosongkan cart setelah checkout
+        CartItem::where('selected', true)->delete();
+
+        // Redirect ke halaman payment
+        return redirect()->route('payment', ['order_id' => $order->id]);
     }
 }

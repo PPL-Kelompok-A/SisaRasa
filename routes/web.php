@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -69,11 +70,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id}/send', [ChatController::class, 'send'])->name('chat.send');
     Route::get('/chat/start/{userId}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
 });
 
 
 // --- PENAMBAHAN ROUTE ULASAN ANDA DI SINI ---
 Route::middleware(['auth'])->group(function () {
+    
     // 1. Route untuk MENAMPILKAN halaman form ulasan.
     //    URL diubah menjadi lebih unik ('/ulasan/buat') agar tidak bentrok dengan route detail riwayat.
     //    Nama 'riwayat.ulasan' tetap sama agar kode teman Anda tidak perlu diubah.
@@ -115,3 +118,17 @@ Route::get('/daftarmenu/menu', function () {
 Route::get('/lokasi', function () {
     return view('mitra.lokasi');
 })->name('lokasi');
+
+// Payment routes
+Route::middleware(['auth', 'verified'])->prefix('payment')->group(function () {
+    Route::get('/', [PaymentController::class, 'showPaymentPage'])->name('payment.show');
+    Route::get('/details/{methodId}', [PaymentController::class, 'getPaymentDetails'])->name('payment.details');
+    Route::post('/payment/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
+    Route::post('/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+});
+
+//notifications routes
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+});

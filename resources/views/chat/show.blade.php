@@ -269,6 +269,48 @@
   </div>
 
   <div class="chat-container">
+  <div class="main-chat">
+    <!-- contoh chat header -->
+    <div class="chat-header">
+      <img src="https://i.pravatar.cc/150?img=12" alt="Avatar">
+      {{ $receiver->name ?? 'Pengguna' }}
+    </div>
+
+    <div class="chat-body">
+      {{-- Daftar pesan bisa kamu render di sini --}}
+      @foreach($messages as $message)
+        <div class="message-wrapper {{ $message->sender_id === auth()->id() ? 'outgoing' : 'incoming' }}">
+          <img src="https://i.pravatar.cc/100?u={{ $message->sender_id }}" class="avatar">
+          <div>
+            <div class="message {{ $message->sender_id === auth()->id() ? 'outgoing' : 'incoming' }}">
+              {{ $message->body }}
+            </div>
+            <span class="timestamp">{{ $message->created_at->format('H:i') }}</span>
+          </div>
+        </div>
+      @endforeach
+
+      {{-- Form Upload Bukti Pembayaran --}}
+      @if(request()->has('order_id'))
+        <form action="{{ route('chat.sendPaymentProof') }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+          @csrf
+          <input type="hidden" name="order_id" value="{{ request('order_id') }}">
+
+          <label for="proof_image" style="font-weight: bold; margin-bottom: 5px; display: block;">Upload Bukti Pembayaran</label>
+          <input type="file" name="proof_image" accept="image/*" required style="margin-bottom: 10px;">
+
+          <button type="submit" style="background-color: #0B3D3B; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">
+            Kirim Bukti Pembayaran
+          </button>
+        </form>
+      @endif
+    </div>
+
+    <div class="message-input">
+      <input type="text" placeholder="Ketik pesan...">
+      <button class="icon-btn"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</div>
     
   </div>
 
