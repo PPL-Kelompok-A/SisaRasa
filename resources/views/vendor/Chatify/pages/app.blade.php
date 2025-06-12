@@ -86,6 +86,32 @@
         <div class="m-body messages-container app-scroll">
             <div class="messages">
                 <p class="message-hint center-el"><span>Please select a chat to start messaging</span></p>
+                @if(request()->has('order_id'))
+                    <div class="upload-instruction" style="text-align: center; padding: 25px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 3px solid #ff9800; border-radius: 15px; margin: 20px; box-shadow: 0 6px 12px rgba(0,0,0,0.15);">
+                        <div style="font-size: 40px; margin-bottom: 15px;">📎💳✨</div>
+                        <h2 style="margin: 0 0 15px 0; color: #e65100; font-weight: 800; font-size: 22px;">
+                            UPLOAD BUKTI PEMBAYARAN
+                        </h2>
+                        <div style="background: white; padding: 15px; border-radius: 10px; margin: 15px 0; border: 2px solid #ff9800;">
+                            <p style="margin: 0; color: #d84315; font-weight: 700; font-size: 18px;">
+                                👇 SCROLL KE BAWAH 👇
+                            </p>
+                            <p style="margin: 10px 0 5px 0; color: #bf360c; font-weight: 600; font-size: 16px;">
+                                Klik pada kotak file input di bawah chat
+                            </p>
+                            <p style="margin: 5px 0; color: #d84315; font-size: 14px;">
+                                (Kotak dengan border biru putus-putus)
+                            </p>
+                        </div>
+                        <div style="background: #e8f5e8; padding: 12px; border-radius: 8px; border: 2px solid #4caf50;">
+                            <p style="margin: 0; font-size: 14px; color: #2e7d32; font-weight: 600;">
+                                ✅ Format: JPG, PNG, PDF, DOC, DOCX, TXT, ZIP<br>
+                                ✅ Maksimal: 150MB<br>
+                                ✅ Klik langsung pada input file untuk buka file manager
+                            </p>
+                        </div>
+                    </div>
+                @endif
             </div>
             {{-- Typing indicator --}}
             <div class="typing-indicator">

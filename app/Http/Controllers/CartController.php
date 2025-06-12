@@ -9,6 +9,7 @@ use App\Models\OrderItem; // Pastikan ini diimpor
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationService;
 
 class CartController extends Controller
 {
@@ -16,28 +17,29 @@ class CartController extends Controller
     {
         $food = Food::findOrFail($request->food_id);
 
-        // --- PENAMBAHAN BAGIAN ANDA UNTUK MENCEGAH ERROR mitra_id ---
-        // Ini adalah validasi untuk memastikan Food yang ditambahkan memiliki mitra_id.
-        // Jika tidak ada, ia akan mengembalikan error ke pengguna.
-        if (is_null($food->mitra_id)) {
+        // Tentukan mitra_id - gunakan mitra_id jika ada, jika tidak gunakan user_id sebagai fallback
+        $mitraId = $food->mitra_id ?? $food->user_id;
+
+        // Validasi untuk memastikan ada informasi mitra
+        if (is_null($mitraId)) {
             return back()->with('error', 'Gagal menambahkan item: Informasi mitra untuk makanan ini tidak ditemukan.');
         }
-        // --- AKHIR PENAMBAHAN BAGIAN ANDA ---
 
-        // Cek apakah sudah ada di cart (bisa juga pakai user_id jika multi user)
-        $cartItem = CartItem::where('name', $food->name)->first();
+        // Cek apakah sudah ada di cart berdasarkan food_id
+        $cartItem = CartItem::where('food_id', $food->id)->first();
         if ($cartItem) {
             $cartItem->quantity += 1;
             $cartItem->save();
         } else {
             CartItem::create([
+                'food_id' => $food->id,
                 'name' => $food->name,
-                'desc' => $food->description,
+                'desc' => $food->description ?? '',
                 'price' => $food->price,
                 'img' => $food->image ? Storage::url($food->image) : asset('images/default-food.png'),
                 'quantity' => 1,
                 'selected' => false,
-                'mitra_id' => $food->mitra_id, 
+                'mitra_id' => $mitraId,
             ]);
         }
 
@@ -101,19 +103,23 @@ class CartController extends Controller
 
         // Simpan item order
         foreach ($selectedItems as $item) {
-            OrderItem::create([ // Menggunakan OrderItem::create()
+            $subtotal = $item->price * $item->quantity;
+            OrderItem::create([
                 'order_id' => $order->id,
-                'name' => $item->name,
-                'price' => $item->price,
+                'food_id' => $item->food_id,
                 'quantity' => $item->quantity,
-                // tambahkan kolom lain jika perlu
+                'price' => $item->price,
+                'subtotal' => $subtotal,
             ]);
         }
+
+        // Create notifications for order created
+        NotificationService::orderCreated($order);
 
         // (Opsional) Kosongkan cart setelah checkout
         CartItem::where('selected', true)->delete();
 
         // Redirect ke halaman payment
-        return redirect()->route('payment', ['order_id' => $order->id]);
+        return redirect()->route('payment.show', ['order_id' => $order->id]);
     }
 }

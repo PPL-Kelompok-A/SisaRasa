@@ -42,9 +42,21 @@
 
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex items-center space-x-4">
-                    <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-comment-alt"></i></a>
+                    <a href="/chatify" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-comment-alt"></i></a>
                     <a href="{{ route('cart.index') }}" class="text-xl text-gray-500 hover:text-gray-700"><i class="fas fa-shopping-bag"></i></a>
-                    <a href="#" class="text-xl text-gray-500 hover:text-gray-700"><i class="far fa-bell"></i></a>
+                    <a href="{{ route('notifications.index') }}" class="text-xl text-gray-500 hover:text-gray-700 relative">
+                        <i class="far fa-bell"></i>
+                        @auth
+                            @php
+                                $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('status', 'unread')->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                </span>
+                            @endif
+                        @endauth
+                    </a>
                     <img src="{{ asset('img/id.png') }}" alt="Indonesian Flag" class="w-8 h-5 shadow-md rounded-sm">
                     
                     @auth
@@ -86,9 +98,21 @@
                 <!-- Mobile Navigation -->
                 <div class="flex items-center sm:hidden">
                     <div class="flex items-center space-x-1">
-                        <a href="#" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="far fa-comment-alt"></i></a>
+                        <a href="/chatify" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="far fa-comment-alt"></i></a>
                         <a href="{{ route('cart.index') }}" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="fas fa-shopping-bag"></i></a>
-                        <a href="#" class="text-lg text-gray-500 hover:text-gray-700 px-1"><i class="far fa-bell"></i></a>
+                        <a href="{{ route('notifications.index') }}" class="text-lg text-gray-500 hover:text-gray-700 px-1 relative">
+                            <i class="far fa-bell"></i>
+                            @auth
+                                @php
+                                    $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('status', 'unread')->count();
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                    </span>
+                                @endif
+                            @endauth
+                        </a>
                         <img src="{{ asset('img/id.png') }}" alt="Indonesian Flag" class="w-6 h-4 shadow-md rounded-sm mx-1">
                     </div>
                     

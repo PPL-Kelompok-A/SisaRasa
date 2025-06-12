@@ -552,7 +552,11 @@ body {
   margin: 0;
 }
 .messenger-sendCard input[type="file"] {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 .messenger-sendCard button,
 .messenger-sendCard button:active,
@@ -565,13 +569,99 @@ body {
 }
 .messenger-sendCard label {
   margin: 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+.messenger-sendCard label:hover span {
+  color: var(--primary-color) !important;
+  transform: scale(1.1);
+}
+
+/* Upload attachment preview */
+.attachment-preview {
+  position: relative;
+  margin: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.attachment-preview .cancel {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: #dc3545;
+  font-size: 14px;
+}
+.attachment-preview .cancel:hover {
+  color: #c82333;
+}
+.attachment-preview .image-file {
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+.attachment-preview p {
+  margin: 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Custom upload button */
+#upload-btn {
+  background: none !important;
+  border: none !important;
+  padding: 8px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  z-index: 999 !important;
+  position: relative !important;
+}
+#upload-btn:hover {
+  background: #f8f9fa !important;
+  border-radius: 50% !important;
+  transform: scale(1.1);
+}
+#upload-btn span {
+  color: #007bff !important;
+  font-size: 18px !important;
+  pointer-events: none;
+}
+
+/* File Upload Input Styling */
+#file-upload {
+  transition: all 0.3s ease !important;
+}
+#file-upload:hover {
+  border-color: #0056b3 !important;
+  background: #f8f9fa !important;
+  transform: scale(1.02) !important;
+}
+#file-upload:focus {
+  outline: none !important;
+  border-color: #0056b3 !important;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3) !important;
 }
 .messenger-sendCard svg {
   margin: 9px 10px;
-  color: #bdcbd6;
+  color: #007bff;
   cursor: pointer;
   font-size: 21px;
   transition: transform 0.15s;
+}
+.messenger-sendCard label span {
+  color: #007bff !important;
+  cursor: pointer !important;
+  font-size: 18px !important;
 }
 
 .messenger-sendCard svg:active {

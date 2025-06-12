@@ -1,0 +1,52 @@
+Website : www.sisarasa.com
+Page : Payment System
+Teknik Testing : equivalence partitioning (example)
+Format Test Case
+
+Scenario ID | Case ID | Test Scenario | Type | Test Case | Pre Condition | Steps | Steps Description | Expected Result | Status (Pass/Fail) | Evidence
+
+SRS.PAY.001 | SRS.PAY.001.001 | Customer dapat mengakses halaman pembayaran setelah checkout | Positive | User dapat melihat halaman pembayaran yang berisi detail pesanan | User login sebagai customer dan sudah melakukan checkout | 1 | Login ke Web SisaRasa sebagai customer, tambah item ke cart, lalu checkout | Sistem menampilkan halaman pembayaran dengan detail pesanan, metode pembayaran, dan total harga | Pass | Screenshot halaman payment
+
+SRS.PAY.002 | SRS.PAY.002.001 | Customer dapat memilih metode pembayaran DANA | Positive | User dapat memilih DANA sebagai metode pembayaran | User berada di halaman payment dengan order valid | 1 | Klik radio button "DANA" pada pilihan metode pembayaran | Radio button DANA terseleksi dan menampilkan informasi pembayaran DANA | Pass | Screenshot pilihan DANA selected
+
+SRS.PAY.002 | SRS.PAY.002.002 | Customer dapat memilih metode pembayaran BCA | Positive | User dapat memilih BCA sebagai metode pembayaran | User berada di halaman payment dengan order valid | 1 | Klik radio button "BCA" pada pilihan metode pembayaran | Radio button BCA terseleksi dan menampilkan informasi rekening BCA | Pass | Screenshot pilihan BCA selected
+
+SRS.PAY.002 | SRS.PAY.002.003 | Customer dapat memilih metode pembayaran ShopeePay | Positive | User dapat memilih ShopeePay sebagai metode pembayaran | User berada di halaman payment dengan order valid | 1 | Klik radio button "ShopeePay" pada pilihan metode pembayaran | Radio button ShopeePay terseleksi dan menampilkan informasi ShopeePay | Pass | Screenshot pilihan ShopeePay selected
+
+SRS.PAY.003 | SRS.PAY.003.001 | Customer dapat memproses pembayaran dengan metode yang dipilih | Positive | User dapat submit pembayaran dan redirect ke chat | User sudah memilih salah satu metode pembayaran | 1 | Pilih metode pembayaran, lalu klik tombol "Kirim Bukti Pembayaran" | Sistem memproses pembayaran, update status order ke processing, dan redirect ke halaman chat dengan mitra | Pass | Screenshot redirect ke chatify
+
+SRS.PAY.004 | SRS.PAY.004.001 | Sistem menampilkan error jika tidak memilih metode pembayaran | Negative | User submit tanpa memilih metode pembayaran | User berada di halaman payment | 1 | Klik tombol "Kirim Bukti Pembayaran" tanpa memilih metode pembayaran | Sistem menampilkan pesan error validasi "The payment method field is required" | Pass | Screenshot error validation
+
+SRS.PAY.005 | SRS.PAY.005.001 | Customer dapat melihat detail pesanan di halaman pembayaran | Positive | User dapat melihat item pesanan, quantity, dan total harga | User sudah checkout dan memiliki order dengan items | 1 | Scroll ke bagian "Detail Pesanan" pada halaman payment | Sistem menampilkan daftar item yang dipesan, quantity, harga per item, dan total pembayaran dengan benar | Pass | Screenshot detail pesanan
+
+SRS.PAY.006 | SRS.PAY.006.001 | Customer tidak dapat mengakses halaman pembayaran tanpa order | Negative | User mengakses URL payment tanpa order_id | User login sebagai customer tapi tidak memiliki order aktif | 1 | Akses URL "/payment" langsung tanpa parameter order_id | Sistem menampilkan halaman kosong atau pesan "Tidak ada pesanan" | Pass | Screenshot halaman tanpa order
+
+SRS.PAY.007 | SRS.PAY.007.001 | Customer tidak dapat mengakses order milik user lain | Security | User mencoba akses order_id milik customer lain | User login sebagai customer A, ada order milik customer B | 1 | Akses URL "/payment?order_id=[order_milik_customer_B]" | Sistem menampilkan error 403 Forbidden "Unauthorized access to this order" | Pass | Screenshot error 403
+
+SRS.PAY.008 | SRS.PAY.008.001 | Sistem menampilkan informasi mitra dengan benar | Positive | User dapat melihat nama mitra dan informasi kontak | User di halaman payment dengan order yang memiliki mitra | 1 | Lihat bagian informasi mitra pada halaman payment | Sistem menampilkan nama mitra, foto profil (jika ada), dan informasi kontak mitra | Pass | Screenshot info mitra
+
+SRS.PAY.009 | SRS.PAY.009.001 | Customer dapat kembali ke halaman cart dari payment | Positive | User dapat navigasi kembali ke cart | User berada di halaman payment | 1 | Klik tombol "Back" pada browser atau link "Kembali ke Cart" | Sistem menampilkan halaman cart dengan item yang sama seperti sebelumnya | Pass | Screenshot kembali ke cart
+
+SRS.PAY.010 | SRS.PAY.010.001 | Sistem memvalidasi order status sebelum payment | Positive | User hanya bisa bayar order dengan status pending | User memiliki order dengan status "pending" | 1 | Akses halaman payment untuk order dengan status pending | Sistem mengizinkan akses dan menampilkan form pembayaran lengkap | Pass | Screenshot form payment aktif
+
+SRS.PAY.010 | SRS.PAY.010.002 | Sistem menolak payment untuk order yang sudah diproses | Negative | User tidak bisa bayar order dengan status selain pending | User memiliki order dengan status "processing" atau "completed" | 1 | Akses halaman payment untuk order yang sudah diproses | Sistem menampilkan pesan "Order sudah diproses" dan tidak menampilkan form pembayaran | Pass | Screenshot order sudah diproses
+
+SRS.PAY.011 | SRS.PAY.011.001 | Sistem menampilkan total pembayaran dengan benar | Positive | User dapat melihat kalkulasi total yang akurat | User memiliki order dengan multiple items dan quantity berbeda | 1 | Lihat bagian "Total Pembayaran" pada halaman payment | Sistem menampilkan subtotal per item, total quantity, dan total akhir yang sesuai dengan kalkulasi (quantity × harga) | Pass | Screenshot total payment
+
+SRS.PAY.012 | SRS.PAY.012.001 | Customer redirect ke chat setelah payment berhasil | Positive | User otomatis masuk ke chat dengan mitra setelah submit payment | User sudah submit payment dengan metode yang valid | 1 | Tunggu proses setelah klik "Kirim Bukti Pembayaran" | Sistem redirect ke "/chatify/{mitra_id}?order_id={order_id}" dan menampilkan interface chat | Pass | Screenshot halaman chat
+
+SRS.PAY.013 | SRS.PAY.013.001 | Sistem menampilkan loading state saat memproses payment | Positive | User melihat indikator loading saat submit payment | User sudah pilih metode pembayaran dan klik submit | 1 | Observe tombol "Kirim Bukti Pembayaran" setelah diklik | Tombol menampilkan loading spinner atau berubah menjadi disabled state selama proses | Pass | Screenshot loading state
+
+SRS.PAY.014 | SRS.PAY.014.001 | Halaman payment responsive di mobile device | Positive | User dapat menggunakan halaman payment di mobile dengan baik | User akses website dari mobile browser | 1 | Akses halaman payment dari mobile device atau resize browser ke mobile size | Layout responsive, tombol mudah diklik, text readable, dan semua elemen tertampil dengan baik | Pass | Screenshot mobile view
+
+SRS.PAY.015 | SRS.PAY.015.001 | Sistem menangani session timeout dengan baik | Negative | User session expired saat di halaman payment | User idle di halaman payment melebihi session timeout | 1 | Biarkan halaman payment terbuka tanpa aktivitas hingga session expired, lalu coba submit payment | Sistem redirect ke halaman login dengan pesan "Session expired, please login again" | Pass | Screenshot redirect login
+
+SRS.PAY.016 | SRS.PAY.016.001 | Customer dapat melihat metode pembayaran yang tersedia | Positive | User dapat melihat semua opsi pembayaran yang disediakan | User berada di halaman payment | 1 | Lihat bagian "Pilih Metode Pembayaran" | Sistem menampilkan 3 metode pembayaran: DANA, BCA, dan ShopeePay dengan radio button | Pass | Screenshot metode pembayaran
+
+SRS.PAY.017 | SRS.PAY.017.001 | Sistem menampilkan alamat pengiriman dengan benar | Positive | User dapat melihat alamat pengiriman yang sesuai dengan order | User memiliki order dengan alamat pengiriman | 1 | Lihat bagian "Alamat Pengiriman" pada halaman payment | Sistem menampilkan alamat pengiriman yang sesuai dengan yang diinput saat checkout | Pass | Screenshot alamat pengiriman
+
+SRS.PAY.018 | SRS.PAY.018.001 | Customer tidak dapat submit payment dengan order yang sudah dibayar | Negative | User tidak bisa bayar ulang order yang sudah dibayar | User memiliki order dengan status "completed" | 1 | Coba akses halaman payment untuk order yang sudah completed | Sistem menampilkan pesan "Order sudah selesai" dan tidak menampilkan form pembayaran | Pass | Screenshot order completed
+
+SRS.PAY.019 | SRS.PAY.019.001 | Sistem menampilkan notifikasi setelah payment berhasil | Positive | User melihat konfirmasi bahwa payment berhasil diproses | User berhasil submit payment | 1 | Perhatikan notifikasi setelah klik "Kirim Bukti Pembayaran" | Sistem menampilkan notifikasi success "Pembayaran berhasil diproses! Silakan upload bukti pembayaran dan chat dengan mitra" | Pass | Screenshot notifikasi success
+
+SRS.PAY.020 | SRS.PAY.020.001 | Customer dapat melihat instruksi pembayaran untuk setiap metode | Positive | User mendapat panduan cara pembayaran sesuai metode yang dipilih | User memilih salah satu metode pembayaran | 1 | Pilih metode pembayaran dan lihat instruksi yang muncul | Sistem menampilkan instruksi spesifik untuk metode yang dipilih (nomor rekening untuk BCA, nomor DANA, dll) | Pass | Screenshot instruksi pembayaran

@@ -69,11 +69,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4-4-4z" />
                         </svg>
                         </a>
-                        <button class="text-gray-500 hover:text-secondary">
+                        <a href="{{ route('notifications.index') }}" class="text-gray-500 hover:text-secondary relative">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                        </button>
+                            @auth
+                                @php
+                                    $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('status', 'unread')->count();
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                    </span>
+                                @endif
+                            @endauth
+                        </a>
                         <button class="text-gray-500 hover:text-secondary">
                             <img src="{{ asset('img/id.png') }}" alt="ID Flag" class="h-4 w-6 object-cover">
                         </button>
@@ -134,16 +144,26 @@
                         </div>
                         <div class="mt-3 space-y-1">
                             <div class="flex space-x-4 px-3">
-                                <button class="text-gray-500 hover:text-secondary">
+                                <a href="/chatify" class="text-gray-500 hover:text-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4-4-4z" />
                                     </svg>
-                                </button>
-                                <button class="text-gray-500 hover:text-secondary">
+                                </a>
+                                <a href="{{ route('notifications.index') }}" class="text-gray-500 hover:text-secondary relative">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                     </svg>
-                                </button>
+                                    @auth
+                                        @php
+                                            $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('status', 'unread')->count();
+                                        @endphp
+                                        @if($unreadCount > 0)
+                                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                                {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                            </span>
+                                        @endif
+                                    @endauth
+                                </a>
                                 <button class="text-gray-500 hover:text-secondary">
                                     <img src="{{ asset('img/id.png') }}" alt="ID Flag" class="h-4 w-6 object-cover">
                                 </button>

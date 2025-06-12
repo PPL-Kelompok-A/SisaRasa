@@ -1,0 +1,134 @@
+SISTEM NOTIFIKASI MITRA - TEST CASES
+=====================================
+
+Test Case 1: Login dan Akses Notifikasi
+---------------------------------------
+| Step | Action | Expected Result | Status |
+|------|--------|----------------|--------|
+| 1 | Buka http://localhost:8000/login | Halaman login muncul | |
+| 2 | Input email: mitra@sisarasa.com | Email terisi | |
+| 3 | Input password: password | Password terisi | |
+| 4 | Klik tombol Login | Redirect ke dashboard mitra | |
+| 5 | Klik icon notifikasi (bell) di navbar | Redirect ke /notifications | |
+| 6 | Cek halaman notifikasi | Halaman notifikasi terbuka | |
+
+Test Case 2: Melihat Notifikasi yang Belum Dibaca
+------------------------------------------------
+| Step | Action | Expected Result | Status |
+|------|--------|----------------|--------|
+| 1 | Login sebagai mitra (steps 1-4 dari TC1) | Dashboard mitra terbuka | |
+| 2 | Buka /notifications | Halaman notifikasi terbuka | |
+| 3 | Cek apakah ada notifikasi unread | Notifikasi dengan border biru/orange | |
+| 4 | Cek badge di navbar | Badge merah dengan angka unread | |
+| 5 | Cek tombol mark as read | Tombol check (✓) tersedia | |
+
+Test Case 3: Tandai Notifikasi Sebagai Dibaca (Individual)
+---------------------------------------------------------
+| Step | Action | Expected Result | Status |
+|------|--------|----------------|--------|
+| 1 | Login sebagai mitra | Dashboard terbuka | |
+| 2 | Buka halaman notifikasi | Halaman notifikasi terbuka | |
+| 3 | Cari notifikasi yang belum dibaca | Notifikasi dengan border biru/orange | |
+| 4 | Klik tombol check (✓) pada notifikasi | Loading/processing | |
+| 5 | Tunggu response | Halaman refresh atau success message | |
+| 6 | Cek status notifikasi | Border berubah jadi abu-abu | |
+| 7 | Cek badge di navbar | Angka berkurang 1 | |
+
+Test Case 4: Tandai Semua Notifikasi Sebagai Dibaca
+--------------------------------------------------
+| Step | Action | Expected Result | Status |
+|------|--------|----------------|--------|
+| 1 | Login sebagai mitra | Dashboard terbuka | |
+| 2 | Buka halaman notifikasi | Halaman notifikasi terbuka | |
+| 3 | Cek ada multiple notifikasi unread | Beberapa notifikasi unread | |
+| 4 | Klik "Tandai Semua Dibaca" | Loading/processing | |
+| 5 | Tunggu response | Halaman refresh | |
+| 6 | Cek semua notifikasi | Semua border jadi abu-abu | |
+| 7 | Cek badge di navbar | Badge hilang atau angka 0 | |
+
+Test Case 5: Notifikasi Kosong
+------------------------------
+| Step | Action | Expected Result | Status |
+|------|--------|----------------|--------|
+| 1 | Login sebagai mitra | Dashboard terbuka | |
+| 2 | Buka halaman notifikasi | Halaman notifikasi terbuka | |
+| 3 | Cek jika tidak ada notifikasi | Pesan "Tidak ada notifikasi" | |
+| 4 | Cek badge di navbar | Tidak ada badge merah | |
+
+SELENIUM SPECIFIC TEST CASES
+============================
+
+Selenium Test Case 1: Element Detection
+---------------------------------------
+| Step | Selenium Action | Expected Element | Status |
+|------|----------------|------------------|--------|
+| 1 | driver.get("/login") | Page loads | |
+| 2 | find_element(By.NAME, "email") | Email input found | |
+| 3 | find_element(By.NAME, "password") | Password input found | |
+| 4 | find_element(By.XPATH, "//button[@type='submit']") | Login button found | |
+| 5 | driver.get("/notifications") | Notifications page loads | |
+| 6 | find_elements(By.CLASS_NAME, "notification-card") | Notification cards found | |
+| 7 | find_elements(By.CLASS_NAME, "mark-read-btn") | Mark read buttons found | |
+
+Selenium Test Case 2: Click Actions
+-----------------------------------
+| Step | Selenium Action | Expected Result | Status |
+|------|----------------|----------------|--------|
+| 1 | Login automation | Login successful | |
+| 2 | Navigate to notifications | Page loads | |
+| 3 | WebDriverWait for notification-card | Elements visible | |
+| 4 | WebDriverWait for mark-read-btn | Button clickable | |
+| 5 | scroll_into_view(button) | Button in viewport | |
+| 6 | button.click() | Click successful | |
+| 7 | Wait for page response | Success or page reload | |
+
+DEBUGGING CHECKLIST
+===================
+
+Jika Selenium Stuck/Timeout:
+----------------------------
+□ Cek apakah server Laravel running (php artisan serve)
+□ Cek apakah database ada data notifikasi
+□ Cek apakah user mitra ada (mitra@sisarasa.com)
+□ Buka manual di browser: http://localhost:8000/notifications
+□ Cek console browser untuk JavaScript errors
+□ Cek network tab untuk failed requests
+□ Cek element inspector untuk class names yang benar
+
+Selenium Element Not Found:
+---------------------------
+□ Increase WebDriverWait timeout (30+ seconds)
+□ Add time.sleep() after page navigation
+□ Use multiple selector strategies
+□ Check for dynamic content loading
+□ Verify element exists in page source
+□ Take screenshot for visual debugging
+
+Common Selenium Issues:
+----------------------
+□ Chrome driver version compatibility
+□ Window size too small (use --window-size=1920,1080)
+□ Page not fully loaded (wait for specific elements)
+□ JavaScript not executed (wait for dynamic content)
+□ Element covered by other elements (scroll into view)
+□ Implicit vs Explicit waits conflict
+
+EXPECTED SELECTORS
+==================
+
+Notification Elements:
+- .notification-card (notification container)
+- .mark-read-btn (mark as read button)
+- #notification-{id} (specific notification)
+- button[data-notification-id] (button with data attribute)
+
+Status Indicators:
+- .unread-indicator (unread dot)
+- .border-blue-200 (unread border)
+- .border-gray-200 (read border)
+- .bg-blue-50 (unread background)
+
+Navigation Elements:
+- a[href="/notifications"] (notification link in navbar)
+- .fas.fa-bell (bell icon)
+- span with badge count (notification count)
